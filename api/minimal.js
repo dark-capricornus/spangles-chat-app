@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 // Health endpoint
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
@@ -61,7 +61,7 @@ app.get('/health', (req, res) => {
 });
 
 // Test database
-app.get('/db-test', async (req, res) => {
+app.get('/api/db-test', async (req, res) => {
   try {
     await connectDB();
     res.json({
@@ -78,7 +78,7 @@ app.get('/db-test', async (req, res) => {
 });
 
 // Register endpoint
-app.post('/auth/register', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   try {
     await connectDB();
     
@@ -135,7 +135,7 @@ app.post('/auth/register', async (req, res) => {
 });
 
 // Login endpoint
-app.post('/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   try {
     await connectDB();
     

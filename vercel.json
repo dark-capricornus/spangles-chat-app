@@ -12,19 +12,22 @@
         "distDir": "build"
       }
     }
-  ],
-  "routes": [
+  ],  "routes": [
     {
       "src": "/api/debug",
       "dest": "/api/debug.js"
     },
     {
+      "src": "/api/simple/(.*)",
+      "dest": "/api/simple.js"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/api/simple.js"
     },
     {
       "src": "/uploads/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/api/simple.js"
     },
     {
       "src": "/(.*)",

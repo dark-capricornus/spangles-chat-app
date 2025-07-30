@@ -2,23 +2,26 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config();
 
-// Environment validation for production
-if (!process.env.JWT_SECRET) {
-  console.error('❌ JWT_SECRET environment variable is required');
-  process.exit(1);
+// Don't use process.exit in serverless functions - it kills the function
+const validateEnvironment = () => {
+  const missing = [];
+  if (!process.env.JWT_SECRET) missing.push('JWT_SECRET');
+  if (!process.env.MONGODB_URI) missing.push('MONGODB_URI');
+  
+  if (missing.length > 0) {
+    throw new Error(`Missing environment variables: ${missing.join(', ')}`);
+  }
+};
+
+// Validate environment on startup
+try {
+  validateEnvironment();
+  console.log('✅ Environment variables validated');
+} catch (error) {
+  console.error('❌ Environment validation failed:', error.message);
+  throw error;
 }
-
-if (!process.env.MONGODB_URI) {
-  console.error('❌ MONGODB_URI environment variable is required');
-  process.exit(1);
-}
-
-console.log('✅ Environment variables validated');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('JWT_SECRET length:', process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 'undefined');
-console.log('MONGODB_URI defined:', !!process.env.MONGODB_URI);
 
 const authRoutes = require('../server/routes/auth');
 const userRoutes = require('../server/routes/users');

@@ -87,30 +87,56 @@ const connectToDatabase = async () => {
 
 app.use('/uploads', express.static(path.join(__dirname, '../server/uploads')));
 
-app.use('/auth', async (req, res, next) => {
+// Connect to database and mount routes
+const setupRoutes = async () => {
   await connectToDatabase();
-  authRoutes(req, res, next);
-});
+};
+
+// Mount routes with database connection
+app.use('/auth', async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed', message: error.message });
+  }
+}, authRoutes);
 
 app.use('/users', async (req, res, next) => {
-  await connectToDatabase();
-  userRoutes(req, res, next);
-});
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed', message: error.message });
+  }
+}, userRoutes);
 
 app.use('/posts', async (req, res, next) => {
-  await connectToDatabase();
-  postRoutes(req, res, next);
-});
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed', message: error.message });
+  }
+}, postRoutes);
 
 app.use('/chat', async (req, res, next) => {
-  await connectToDatabase();
-  chatRoutes(req, res, next);
-});
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed', message: error.message });
+  }
+}, chatRoutes);
 
 app.use('/notifications', async (req, res, next) => {
-  await connectToDatabase();
-  notificationRoutes(req, res, next);
-});
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed', message: error.message });
+  }
+}, notificationRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ 

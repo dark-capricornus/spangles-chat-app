@@ -23,11 +23,11 @@
     },
     {
       "src": "/api/(.*)",
-      "dest": "/api/simple.js"
+      "dest": "/api/index.js"
     },
     {
       "src": "/uploads/(.*)",
-      "dest": "/api/simple.js"
+      "dest": "/api/index.js"
     },
     {
       "src": "/(.*)",

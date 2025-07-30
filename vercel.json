@@ -20,14 +20,12 @@
     {
       "src": "/api/simple/(.*)",
       "dest": "/api/simple.js"
-    },
-    {
+    },    {
       "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    },
-    {
+      "dest": "/api/minimal.js"
+    },    {
       "src": "/uploads/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/api/minimal.js"
     },
     {
       "src": "/manifest.json",

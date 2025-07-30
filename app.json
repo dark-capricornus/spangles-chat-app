@@ -1,0 +1,38 @@
+{
+  "name": "Spangles Chat App",
+  "description": "Full-stack social media chat application with real-time features",
+  "repository": "https://github.com/your-username/spangles-chat-app",
+  "logo": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/messenger.svg",
+  "keywords": ["node", "express", "react", "socket.io", "chat", "social-media", "mongodb"],
+  "image": "heroku/nodejs",
+  "stack": "heroku-22",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment (production for Heroku)",
+      "value": "production"
+    },
+    "JWT_SECRET": {
+      "description": "Secret key for JWT token generation",
+      "generator": "secret"
+    },
+    "MONGODB_URI": {
+      "description": "MongoDB connection string (get from MongoDB Atlas)",
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [],
+  "scripts": {
+    "postdeploy": "echo 'Deployment complete! Your Spangles Chat App is now live.'"
+  }
+}

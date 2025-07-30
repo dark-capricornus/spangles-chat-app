@@ -1,0 +1,29 @@
+{
+  "name": "spangles-chat-app",
+  "version": "1.0.0",
+  "description": "Full-stack social media chat application with real-time features",
+  "main": "server/index.js",  "scripts": {
+    "start": "node server/index.js",
+    "dev": "concurrently \"cd server && npm start\" \"cd client && npm start\"",
+    "build": "cd client && npm run build",
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "install:all": "npm run install:server && npm run install:client",
+    "heroku-postbuild": "npm run install:all && npm run build && cp -r client/build/* server/public/ || xcopy client\\build\\* server\\public\\ /E /Y"
+  },
+  "keywords": [
+    "social-media",
+    "chat",
+    "react",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.11.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

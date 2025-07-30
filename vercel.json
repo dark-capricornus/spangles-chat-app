@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "name": "spangles-chat-app",
+  "builds": [
+    {
+      "src": "server/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "/server/uploads/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/build/index.html"
+    }
+  ],
+  "buildCommand": "cd client && npm run build",
+  "outputDirectory": "client/build",
+  "installCommand": "npm install && cd client && npm install && cd ../server && npm install",
+  "framework": "create-react-app",
+  "env": {
+    "NODE_ENV": "production",
+    "JWT_SECRET": "@jwt_secret",
+    "MONGODB_URI": "@mongodb_uri"
+  },
+  "functions": {
+    "server/index.js": {
+      "maxDuration": 30
+    }
+  }
+}

@@ -15,7 +15,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'https://spangles-chat-app.vercel.app',
-  'https://*.vercel.app',
+  'https://spangles-chat-app-git-main-dark-capricornus-projects.vercel.app',
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
   process.env.CLIENT_URL
 ].filter(Boolean);
@@ -24,21 +24,22 @@ app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     
+    if (origin && origin.includes('vercel.app')) {
+      return callback(null, true);
+    }
+    
     const isAllowed = allowedOrigins.some(allowedOrigin => {
-      if (allowedOrigin.includes('*')) {
-        const pattern = allowedOrigin.replace('*', '.*');
-        return new RegExp(pattern).test(origin);
-      }
       return allowedOrigin === origin;
     });
     
     if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true);
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true
 }));
 
@@ -67,47 +68,37 @@ const connectToDatabase = async () => {
 
 app.use('/uploads', express.static(path.join(__dirname, '../server/uploads')));
 
-app.use('/api/auth', async (req, res, next) => {
+app.use('/auth', async (req, res, next) => {
   await connectToDatabase();
   authRoutes(req, res, next);
 });
 
-app.use('/api/users', async (req, res, next) => {
+app.use('/users', async (req, res, next) => {
   await connectToDatabase();
   userRoutes(req, res, next);
 });
 
-app.use('/api/posts', async (req, res, next) => {
+app.use('/posts', async (req, res, next) => {
   await connectToDatabase();
   postRoutes(req, res, next);
 });
 
-app.use('/api/chat', async (req, res, next) => {
+app.use('/chat', async (req, res, next) => {
   await connectToDatabase();
   chatRoutes(req, res, next);
 });
 
-app.use('/api/notifications', async (req, res, next) => {
+app.use('/notifications', async (req, res, next) => {
   await connectToDatabase();
   notificationRoutes(req, res, next);
 });
 
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development'
   });
 });
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  
-  app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-    }
-  });
-}
 
 module.exports = app;

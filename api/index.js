@@ -4,11 +4,11 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
-const postRoutes = require('./routes/posts');
-const chatRoutes = require('./routes/chat');
-const notificationRoutes = require('./routes/notifications');
+const authRoutes = require('../server/routes/auth');
+const userRoutes = require('../server/routes/users');
+const postRoutes = require('../server/routes/posts');
+const chatRoutes = require('../server/routes/chat');
+const notificationRoutes = require('../server/routes/notifications');
 
 const app = express();
 
@@ -65,7 +65,7 @@ const connectToDatabase = async () => {
   }
 };
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../server/uploads')));
 
 app.use('/api/auth', async (req, res, next) => {
   await connectToDatabase();

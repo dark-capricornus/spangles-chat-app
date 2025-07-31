@@ -25,7 +25,9 @@ const allowedOrigins = [
   'http://10.225.60.39:3000',
   'http://localhost:5000',
   'http://10.225.60.39:5000',
-  process.env.CLIENT_URL
+  process.env.CLIENT_URL,
+  'https://spangles-chat-app.vercel.app', // Frontend Vercel domain
+  'https://chatapp-peach-kappa.vercel.app' // Backend Vercel domain
 ].filter(Boolean);
 
 const io = new Server(server, {

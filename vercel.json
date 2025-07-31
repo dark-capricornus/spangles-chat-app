@@ -24,8 +24,12 @@
       "dest": "/api/minimal.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|svg|ico|json|txt|woff|woff2|map))",
       "dest": "/client/build/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/build/index.html"
     }
   ]
 }

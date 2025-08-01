@@ -2,25 +2,21 @@ import axios from 'axios';
 
 const getApiBaseUrl = () => {
   if (process.env.NODE_ENV === 'production') {
-    if (process.env.REACT_APP_API_URL) {
-      return process.env.REACT_APP_API_URL;
-    }
-    return `${window.location.origin}/api`;
+    return process.env.REACT_APP_API_URL || `${window.location.origin}/api`;
   }
-
-  if (process.env.REACT_APP_API_URL) {
-    return process.env.REACT_APP_API_URL;
-  }
-
-  return 'http://localhost:5000/api';
+  return process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 };
 
 const baseURL = getApiBaseUrl();
 
 const api = axios.create({
   baseURL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    'Access-Control-Allow-Credentials': true,
   },
 });
 

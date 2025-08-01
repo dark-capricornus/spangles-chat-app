@@ -19,17 +19,21 @@ const socketHandlers = require('./socket/socketHandlers');
 
 const app = express();
 const server = createServer(app);
+
+// Define allowed origins
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  'http://10.225.60.39:3000',
   'http://localhost:5000',
-  'http://10.225.60.39:5000',
-  process.env.CLIENT_URL,
-  'https://spangles-chat-app.vercel.app', // Frontend Vercel domain
-  'https://chatapp-peach-kappa.vercel.app' // Backend Vercel domain
+  'https://spangles-chat-app.vercel.app'
 ].filter(Boolean);
 
+// Add CLIENT_URL if defined
+if (process.env.CLIENT_URL) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+}
+
+// Configure Socket.IO with CORS
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
@@ -38,25 +42,24 @@ const io = new Server(server, {
   }
 });
 
-app.use(cors({
-  origin: true, // Allow all origins temporarily for debugging
+// Configure CORS options
+const corsOptions = {
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   credentials: true,
-  maxAge: 86400 // Cache preflight requests for 24 hours
-}));
+  maxAge: 86400
+};
 
-// Add preflight handler for all routes
-app.options('*', cors());
-
-// Enable pre-flight requests for all routes
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  next();
-});
+// Apply CORS configuration
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
